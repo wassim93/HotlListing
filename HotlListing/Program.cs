@@ -1,4 +1,5 @@
 using HotlListing;
+using HotlListing.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -12,6 +13,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddAutoMapper(typeof(MapperInitinializer));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
