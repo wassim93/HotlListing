@@ -1,9 +1,10 @@
 ﻿using HotlListing.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotlListing
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<ApiUser>
     {
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -14,6 +15,7 @@ namespace HotlListing
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().HasData(
                 new Country { Id = 1, Name = "Jamaica", ShortName = "JM" },
                 new Country { Id = 2, Name = "Bahamas", ShortName = "BS" },
