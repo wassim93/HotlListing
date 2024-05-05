@@ -1,5 +1,7 @@
 using HotlListing;
 using HotlListing.Configurations;
+using HotlListing.IRespository;
+using HotlListing.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -14,9 +16,10 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(b
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddAutoMapper(typeof(MapperInitinializer));
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
 var app = builder.Build();
