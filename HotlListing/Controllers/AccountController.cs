@@ -12,12 +12,12 @@ namespace HotlListing.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
-        //private readonly SignInManager<ApiUser> _signInManager;
+        private readonly SignInManager<ApiUser> _signInManager;
         private readonly UserManager<ApiUser> _userManager;
 
-        public AccountController(UserManager<ApiUser> userManager, ILogger<AccountController> logger, IMapper mapper)
+        public AccountController(UserManager<ApiUser> userManager, ILogger<AccountController> logger, IMapper mapper, SignInManager<ApiUser> signInManager)
         {
-            // _signInManager = signInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
@@ -61,35 +61,35 @@ namespace HotlListing.Controllers
 
         }
 
-        /* [HttpPost]
-         [Route("login")]
+        [HttpPost]
+        [Route("login")]
 
-         public async Task<IActionResult> Login([FromBody] LoginUserDtO userDto)
-         {
-             _logger.LogInformation($"Login attempt for {userDto.Email}");
-             if (!ModelState.IsValid)
-             {
-                 return BadRequest(ModelState);
-             }
-             try
-             {
-                 var res = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password, false, false);
-                 if (!res.Succeeded)
-                 {
-                     return Unauthorized(userDto);
-                 }
-                 return Accepted();
-
-
-             }
-             catch (Exception ex)
-             {
-
-                 _logger.LogError(ex, $"Something went wrong in the {nameof(Login)}");
-                 return Problem($"something went wrong in{nameof(Login)}", statusCode: 500);
-             }
+        public async Task<IActionResult> Login([FromBody] LoginUserDtO userDto)
+        {
+            _logger.LogInformation($"Login attempt for {userDto.Email}");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var res = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password, false, false);
+                if (!res.Succeeded)
+                {
+                    return Unauthorized(userDto);
+                }
+                return Accepted();
 
 
-         }*/
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, $"Something went wrong in the {nameof(Login)}");
+                return Problem($"something went wrong in{nameof(Login)}", statusCode: 500);
+            }
+
+
+        }
     }
 }
