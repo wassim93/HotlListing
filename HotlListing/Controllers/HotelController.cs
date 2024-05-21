@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HotlListing.Dtos;
 using HotlListing.IRespository;
+using HotlListing.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotlListing.Controllers
@@ -41,7 +43,7 @@ namespace HotlListing.Controllers
             }
 
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetHotel")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
@@ -59,6 +61,37 @@ namespace HotlListing.Controllers
             {
                 _logger.LogError(ex, $"Something went wrong in the {nameof(GetHotelbyId)}");
                 return StatusCode(500, "Internal server error . Please try again later");
+            }
+
+        }
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelDto hotelDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError($"Invalid Post attemp for {nameof(CreateHotel)} ");
+
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var hotel = _mapper.Map<Hotel>(hotelDto);
+                await _unitOfWork.Hotles.Insert(hotel);
+                await _unitOfWork.Save();
+                return CreatedAtRoute("GetHotel", new { id = hotel.Id }, hotel);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something wen wrong for {nameof(CreateHotel)} ");
+
+                return StatusCode(500, "Internal server error");
             }
 
         }
