@@ -29,11 +29,10 @@ namespace HotlListing
                  options.TokenValidationParameters = new TokenValidationParameters
                  {
                      ValidateIssuer = true,
-                     ValidateAudience = true,
+                     ValidateAudience = false,
                      ValidateLifetime = true,
                      ValidateIssuerSigningKey = true,
                      ValidIssuer = jwtIssuer,
-                     ValidAudience = jwtIssuer,
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                  };
              });

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotlListing.Dtos;
 using HotlListing.IRespository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotlListing.Controllers
@@ -21,6 +22,7 @@ namespace HotlListing.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountries()

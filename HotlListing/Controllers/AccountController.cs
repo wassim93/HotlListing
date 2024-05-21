@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using HotlListing.Dtos;
 using HotlListing.Models;
+using HotlListing.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace HotlListing.Controllers
 {
@@ -12,12 +14,12 @@ namespace HotlListing.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
-        private readonly SignInManager<ApiUser> _signInManager;
+        private readonly IAuthManager _authManager;
         private readonly UserManager<ApiUser> _userManager;
 
-        public AccountController(UserManager<ApiUser> userManager, ILogger<AccountController> logger, IMapper mapper, SignInManager<ApiUser> signInManager)
+        public AccountController(UserManager<ApiUser> userManager, ILogger<AccountController> logger, IMapper mapper, IAuthManager authManager)
         {
-            _signInManager = signInManager;
+            _authManager = authManager;
             _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
@@ -64,29 +66,27 @@ namespace HotlListing.Controllers
         [HttpPost]
         [Route("login")]
 
-        public async Task<IActionResult> Login([FromBody] LoginUserDtO userDto)
+        public async Task<IActionResult> Login([FromBody] LoginUserDtO userDTO)
         {
-            _logger.LogInformation($"Login attempt for {userDto.Email}");
+            _logger.LogInformation($"Login Attempt for {userDTO.Email} ");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             try
             {
-                var res = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password, false, false);
-                if (!res.Succeeded)
+                if (!await _authManager.ValidateUser(userDTO))
                 {
-                    return Unauthorized(userDto);
+                    return Unauthorized();
                 }
-                return Accepted();
 
-
+                return Accepted(new TokenRequest { Token = await _authManager.CreateToken() });
             }
             catch (Exception ex)
             {
-
-                _logger.LogError(ex, $"Something went wrong in the {nameof(Login)}");
-                return Problem($"something went wrong in{nameof(Login)}", statusCode: 500);
+                _logger.LogError(ex, $"Something Went Wrong in the {nameof(Login)}");
+                return Problem($"Something Went Wrong in the {nameof(Login)}", statusCode: 500);
             }
 
 
