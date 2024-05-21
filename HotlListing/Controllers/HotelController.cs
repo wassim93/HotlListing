@@ -95,5 +95,45 @@ namespace HotlListing.Controllers
             }
 
         }
+
+
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> UpdateHotel(int id, [FromBody] UpdateHotelDto hotelDto)
+        {
+            if (!ModelState.IsValid || id < 1)
+            {
+                _logger.LogError($"Invalid Put attemp for {nameof(UpdateHotel)} ");
+
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var hotel = await _unitOfWork.Hotles.Get(x => x.Id == id);
+                if (hotel == null)
+                {
+                    _logger.LogError($"Invalid Put attemp for {nameof(UpdateHotel)} ");
+                    return BadRequest("Submitted data is invalid");
+
+                }
+                _mapper.Map(hotelDto, hotel);
+                _unitOfWork.Hotles.Update(hotel);
+                await _unitOfWork.Save();
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something wen wrong for {nameof(UpdateHotel)} ");
+
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
     }
 }

@@ -90,5 +90,44 @@ namespace HotlListing.Controllers
             }
 
         }
+
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> UpdateCountry(int id, [FromBody] UpdateCountryDto countryDto)
+        {
+            if (!ModelState.IsValid || id < 1)
+            {
+                _logger.LogError($"Invalid Put attemp for {nameof(UpdateCountry)} ");
+
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var country = await _unitOfWork.Countries.Get(x => x.Id == id);
+                if (country == null)
+                {
+                    _logger.LogError($"Invalid Put attemp for {nameof(UpdateCountry)} ");
+                    return BadRequest("Submitted data is invalid");
+
+                }
+                _mapper.Map(countryDto, country);
+                _unitOfWork.Countries.Update(country);
+                await _unitOfWork.Save();
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something wen wrong for {nameof(UpdateCountry)} ");
+
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
     }
 }

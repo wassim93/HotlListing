@@ -15,7 +15,6 @@ namespace HotlListing.Dtos
         [Range(1, 5)]
         public double Rating { get; set; }
 
-        [Required]
         public int CountryId { get; set; }
 
     }
@@ -23,5 +22,11 @@ namespace HotlListing.Dtos
     {
         public int Id { get; set; }
         public CountryDto Country { get; set; }
+    }
+
+    public class UpdateHotelDto : CreateHotelDto
+    {
+
+
     }
 }

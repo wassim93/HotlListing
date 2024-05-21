@@ -16,6 +16,13 @@ namespace HotlListing.Dtos
         public int Id { get; set; }
         public IList<HotelDto> Hotels { get; set; }
 
+
+    }
+
+    public class UpdateCountryDto : CreateCountryDto
+    {
+        public IList<CreateHotelDto> Hotels { get; set; }
+
     }
 
 }
