@@ -135,5 +135,46 @@ namespace HotlListing.Controllers
             }
 
         }
+
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> DeletHotel(int id)
+        {
+            if (id < 1)
+            {
+                _logger.LogError($"Invalid Delete attemp for {nameof(DeletHotel)} ");
+
+                return BadRequest();
+            }
+
+            try
+            {
+                var country = await _unitOfWork.Hotles.Get(x => x.Id == id);
+                if (country == null)
+                {
+                    _logger.LogError($"Invalid Delete attemp for {nameof(DeletHotel)} ");
+                    return BadRequest("Country id is invalid");
+
+                }
+                await _unitOfWork.Hotles.Delete(id);
+                await _unitOfWork.Save();
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something wen wrong for {nameof(DeletHotel)} ");
+
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
     }
+
 }

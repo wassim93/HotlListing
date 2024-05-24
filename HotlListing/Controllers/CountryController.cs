@@ -24,6 +24,7 @@ namespace HotlListing.Controllers
 
         [HttpGet]
         [Authorize]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountries()
@@ -124,6 +125,44 @@ namespace HotlListing.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Something wen wrong for {nameof(UpdateCountry)} ");
+
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> DeletCountry(int id)
+        {
+            if (id < 1)
+            {
+                _logger.LogError($"Invalid Delete attemp for {nameof(DeletCountry)} ");
+
+                return BadRequest();
+            }
+
+            try
+            {
+                var country = await _unitOfWork.Countries.Get(x => x.Id == id);
+                if (country == null)
+                {
+                    _logger.LogError($"Invalid Delete attemp for {nameof(DeletCountry)} ");
+                    return BadRequest("Country id is invalid");
+
+                }
+                await _unitOfWork.Countries.Delete(id);
+                await _unitOfWork.Save();
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something wen wrong for {nameof(DeletCountry)} ");
 
                 return StatusCode(500, "Internal server error");
             }
