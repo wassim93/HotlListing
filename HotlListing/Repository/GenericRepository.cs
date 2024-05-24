@@ -1,6 +1,10 @@
-﻿using HotlListing.IRespository;
+﻿using HotlListing.Dtos;
+using HotlListing.IRespository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using X.PagedList;
+
 
 namespace HotlListing.Repository
 {
@@ -63,6 +67,20 @@ namespace HotlListing.Repository
             return await query.AsNoTracking().ToListAsync();
         }
 
+        public async Task<IPagedList<T>> GetPagedList(RequestParams requestParams, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (includes != null)
+            {
+                query = includes(query);
+
+            }
+
+
+            return await query.AsNoTracking().ToPagedListAsync(requestParams.page, requestParams.size);
+        }
+
         public async Task Insert(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -79,5 +97,6 @@ namespace HotlListing.Repository
             _dbContext.Entry(entity).State = EntityState.Modified;
 
         }
+
     }
 }
