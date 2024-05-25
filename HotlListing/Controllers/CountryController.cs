@@ -29,17 +29,12 @@ namespace HotlListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountries([FromQuery] RequestParams requestParams)
         {
-            try
-            {
-                var countries = await _unitOfWork.Countries.GetPagedList(requestParams);
-                var results = _mapper.Map<IList<CountryDto>>(countries);
-                return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(GetCountries)}");
-                return StatusCode(500, "Internal server error . Please try again later");
-            }
+
+            var countries = await _unitOfWork.Countries.GetPagedList(requestParams);
+            var results = _mapper.Map<IList<CountryDto>>(countries);
+            return Ok(results);
+
+
         }
 
         [HttpGet("{id:int}", Name = "GetCountry")]
@@ -47,17 +42,11 @@ namespace HotlListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountry(int id)
         {
-            try
-            {
-                var country = await _unitOfWork.Countries.Get(x => x.Id == id, new List<string> { "Hotels" });
-                var res = _mapper.Map<CountryDto>(country);
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(GetCountry)}");
-                return StatusCode(500, "Internal server error . Please try again later");
-            }
+
+            var country = await _unitOfWork.Countries.Get(x => x.Id == id, new List<string> { "Hotels" });
+            var res = _mapper.Map<CountryDto>(country);
+            return Ok(res);
+
         }
 
         [HttpPost]
@@ -75,20 +64,14 @@ namespace HotlListing.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var country = _mapper.Map<Country>(countryDto);
-                await _unitOfWork.Countries.Insert(country);
-                await _unitOfWork.Save();
-                return CreatedAtRoute("GetCountry", new { id = country.Id }, country);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(CreateCountry)} ");
+            var country = _mapper.Map<Country>(countryDto);
+            await _unitOfWork.Countries.Insert(country);
+            await _unitOfWork.Save();
+            return CreatedAtRoute("GetCountry", new { id = country.Id }, country);
 
-                return StatusCode(500, "Internal server error");
-            }
+
+
 
         }
 
@@ -107,27 +90,20 @@ namespace HotlListing.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var country = await _unitOfWork.Countries.Get(x => x.Id == id);
-                if (country == null)
-                {
-                    _logger.LogError($"Invalid Put attemp for {nameof(UpdateCountry)} ");
-                    return BadRequest("Submitted data is invalid");
 
-                }
-                _mapper.Map(countryDto, country);
-                _unitOfWork.Countries.Update(country);
-                await _unitOfWork.Save();
-                return NoContent();
+            var country = await _unitOfWork.Countries.Get(x => x.Id == id);
+            if (country == null)
+            {
+                _logger.LogError($"Invalid Put attemp for {nameof(UpdateCountry)} ");
+                return BadRequest("Submitted data is invalid");
 
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(UpdateCountry)} ");
+            _mapper.Map(countryDto, country);
+            _unitOfWork.Countries.Update(country);
+            await _unitOfWork.Save();
+            return NoContent();
 
-                return StatusCode(500, "Internal server error");
-            }
+
 
         }
 
@@ -146,26 +122,20 @@ namespace HotlListing.Controllers
                 return BadRequest();
             }
 
-            try
-            {
-                var country = await _unitOfWork.Countries.Get(x => x.Id == id);
-                if (country == null)
-                {
-                    _logger.LogError($"Invalid Delete attemp for {nameof(DeletCountry)} ");
-                    return BadRequest("Country id is invalid");
 
-                }
-                await _unitOfWork.Countries.Delete(id);
-                await _unitOfWork.Save();
-                return NoContent();
+            var country = await _unitOfWork.Countries.Get(x => x.Id == id);
+            if (country == null)
+            {
+                _logger.LogError($"Invalid Delete attemp for {nameof(DeletCountry)} ");
+                return BadRequest("Country id is invalid");
 
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(DeletCountry)} ");
+            await _unitOfWork.Countries.Delete(id);
+            await _unitOfWork.Save();
+            return NoContent();
 
-                return StatusCode(500, "Internal server error");
-            }
+
+
 
         }
     }

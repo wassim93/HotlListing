@@ -28,19 +28,13 @@ namespace HotlListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetHotels()
         {
-            try
-            {
-                var hotels = await _unitOfWork.Hotles.GetAll(null, null, new List<string> { "Country" });
-                var results = _mapper.Map<IList<HotelDto>>(hotels);
-                return Ok(results);
+
+            var hotels = await _unitOfWork.Hotles.GetAll(null, null, new List<string> { "Country" });
+            var results = _mapper.Map<IList<HotelDto>>(hotels);
+            return Ok(results);
 
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(GetHotels)}");
-                return StatusCode(500, "Internal server error . Please try again later");
-            }
+
 
         }
         [HttpGet("{id:int}", Name = "GetHotel")]
@@ -49,19 +43,13 @@ namespace HotlListing.Controllers
 
         public async Task<IActionResult> GetHotelbyId(int id)
         {
-            try
-            {
-                var hotel = await _unitOfWork.Hotles.Get(x => x.Id == id, new List<string> { "Country" });
-                var result = _mapper.Map<HotelDto>(hotel);
-                return Ok(result);
+
+            var hotel = await _unitOfWork.Hotles.Get(x => x.Id == id, new List<string> { "Country" });
+            var result = _mapper.Map<HotelDto>(hotel);
+            return Ok(result);
 
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(GetHotelbyId)}");
-                return StatusCode(500, "Internal server error . Please try again later");
-            }
+
 
         }
         [HttpPost]
@@ -79,20 +67,13 @@ namespace HotlListing.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var hotel = _mapper.Map<Hotel>(hotelDto);
-                await _unitOfWork.Hotles.Insert(hotel);
-                await _unitOfWork.Save();
-                return CreatedAtRoute("GetHotel", new { id = hotel.Id }, hotel);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(CreateHotel)} ");
+            var hotel = _mapper.Map<Hotel>(hotelDto);
+            await _unitOfWork.Hotles.Insert(hotel);
+            await _unitOfWork.Save();
+            return CreatedAtRoute("GetHotel", new { id = hotel.Id }, hotel);
 
-                return StatusCode(500, "Internal server error");
-            }
+
 
         }
 
@@ -112,27 +93,20 @@ namespace HotlListing.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
-                var hotel = await _unitOfWork.Hotles.Get(x => x.Id == id);
-                if (hotel == null)
-                {
-                    _logger.LogError($"Invalid Put attemp for {nameof(UpdateHotel)} ");
-                    return BadRequest("Submitted data is invalid");
 
-                }
-                _mapper.Map(hotelDto, hotel);
-                _unitOfWork.Hotles.Update(hotel);
-                await _unitOfWork.Save();
-                return NoContent();
+            var hotel = await _unitOfWork.Hotles.Get(x => x.Id == id);
+            if (hotel == null)
+            {
+                _logger.LogError($"Invalid Put attemp for {nameof(UpdateHotel)} ");
+                return BadRequest("Submitted data is invalid");
 
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(UpdateHotel)} ");
+            _mapper.Map(hotelDto, hotel);
+            _unitOfWork.Hotles.Update(hotel);
+            await _unitOfWork.Save();
+            return NoContent();
 
-                return StatusCode(500, "Internal server error");
-            }
+
 
         }
 
@@ -153,26 +127,19 @@ namespace HotlListing.Controllers
                 return BadRequest();
             }
 
-            try
-            {
-                var country = await _unitOfWork.Hotles.Get(x => x.Id == id);
-                if (country == null)
-                {
-                    _logger.LogError($"Invalid Delete attemp for {nameof(DeletHotel)} ");
-                    return BadRequest("Country id is invalid");
 
-                }
-                await _unitOfWork.Hotles.Delete(id);
-                await _unitOfWork.Save();
-                return NoContent();
+            var country = await _unitOfWork.Hotles.Get(x => x.Id == id);
+            if (country == null)
+            {
+                _logger.LogError($"Invalid Delete attemp for {nameof(DeletHotel)} ");
+                return BadRequest("Country id is invalid");
 
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something wen wrong for {nameof(DeletHotel)} ");
+            await _unitOfWork.Hotles.Delete(id);
+            await _unitOfWork.Save();
+            return NoContent();
 
-                return StatusCode(500, "Internal server error");
-            }
+
 
         }
     }

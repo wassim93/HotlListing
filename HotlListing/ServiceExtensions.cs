@@ -1,7 +1,9 @@
 ﻿using HotlListing.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 namespace HotlListing
@@ -17,8 +19,6 @@ namespace HotlListing
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-
-
             //Jwt configuration starts here
             var jwtIssuer = configuration.GetSection("Jwt:Issuer").Get<string>();
             var jwtKey = configuration.GetSection("Jwt:Key").Get<string>();
@@ -36,6 +36,29 @@ namespace HotlListing
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                  };
              });
+        }
+
+
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app)
+        {
+            app.UseExceptionHandler(error =>
+            {
+                error.Run(async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                if (contextFeature != null)
+                {
+                    Log.Error($"Something went wrong in the {contextFeature.Error}");
+                    await context.Response.WriteAsync(new Error
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = "Internal Server Error. Please Try Again Later."
+                    }.ToString());
+                }
+            });
+            });
         }
     }
 }
