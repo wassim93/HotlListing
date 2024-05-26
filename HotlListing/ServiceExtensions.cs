@@ -60,5 +60,20 @@ namespace HotlListing
             });
             });
         }
+
+        public static void ConfigureHttpCacheHeader(this IServiceCollection services)
+        {
+            services.AddResponseCaching();
+
+            services.AddHttpCacheHeaders(expirationopt =>
+                {
+                    expirationopt.MaxAge = 65;
+                    expirationopt.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+                }, (validationOpt) =>
+                {
+                    validationOpt.MustRevalidate = true;
+                }
+            );
+        }
     }
 }

@@ -3,6 +3,7 @@ using HotlListing.Configurations;
 using HotlListing.IRespository;
 using HotlListing.Repository;
 using HotlListing.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -16,6 +17,8 @@ builder.Host.UseSerilog((context, configuration) =>
 
 
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddResponseCaching();
+builder.Services.ConfigureHttpCacheHeader();
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
@@ -55,7 +58,7 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllers(config => { config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120 }); }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 
 var app = builder.Build();
@@ -71,6 +74,8 @@ app.ConfigureExceptionHandler();
 
 app.UseSerilogRequestLogging();
 app.UseCors("AllowAll");
+app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 
 app.UseHttpsRedirection();
 
