@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HotlListing.Migrations
+namespace HotelListing.Data.Migrations
 {
     public partial class addingidentiti : Migration
     {

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace HotlListing.Migrations
+namespace HotelListing.Data.Migrations
 {
     public partial class initialCreate : Migration
     {
