@@ -1,9 +1,9 @@
 using AspNetCoreRateLimit;
-using HotlListing;
-using HotlListing.Configurations;
-using HotlListing.IRespository;
-using HotlListing.Repository;
-using HotlListing.Services;
+using HotelListing;
+using HotelListing.Core;
+using HotelListing.Core.IRespository;
+using HotelListing.Core.Repository;
+using HotelListing.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -32,7 +32,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddAutoMapper(typeof(MapperInitinializer));
+builder.Services.ConfigureAutoMapper();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddSwaggerGen(opt =>
@@ -78,6 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.ConfigureExceptionHandler();
+
 
 
 app.UseSerilogRequestLogging();

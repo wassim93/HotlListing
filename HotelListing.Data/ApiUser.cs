@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 
-namespace HotlListing.Models
+namespace HotelListing.Data
 {
     public class ApiUser : IdentityUser
     {

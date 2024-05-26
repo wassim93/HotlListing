@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HotlListing.Models
+namespace HotelListing.Core.Models
 {
     public class Error
     {

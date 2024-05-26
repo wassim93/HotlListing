@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using HotlListing.Dtos;
-using HotlListing.Models;
-using HotlListing.Services;
+using HotelListing.Core.Dtos;
+using HotelListing.Core.Models;
+using HotelListing.Core.Services;
+using HotelListing.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HotlListing.Configurations.Entities
+namespace HotelListing.Configurations.Entities
 {
     public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {

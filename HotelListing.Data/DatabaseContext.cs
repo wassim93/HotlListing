@@ -1,9 +1,9 @@
-﻿using HotlListing.Configurations.Entities;
-using HotlListing.Models;
+﻿using HotelListing.Configurations.Entities;
+using HotelListing.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotlListing
+namespace HotelListing
 {
     public class DatabaseContext : IdentityDbContext<ApiUser>
     {

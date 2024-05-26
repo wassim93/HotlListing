@@ -1,4 +1,4 @@
-﻿namespace HotlListing.Models
+﻿namespace HotelListing.Core.Models
 {
     public class TokenRequest
     {

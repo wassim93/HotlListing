@@ -1,4 +1,4 @@
-﻿namespace HotlListing.Dtos
+﻿namespace HotelListing.Core.Models
 {
     public class RequestParams
     {
@@ -9,7 +9,7 @@
         public int size
         {
             get { return _size; }
-            set { _size = (value > maxPageSize) ? maxPageSize : value; }
+            set { _size = value > maxPageSize ? maxPageSize : value; }
         }
     }
 }

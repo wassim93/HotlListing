@@ -1,8 +1,8 @@
-﻿using HotlListing.Models;
+﻿using HotelListing.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HotlListing.Configurations.Entities
+namespace HotelListing.Configurations.Entities
 {
     public class CountryConfiguration : IEntityTypeConfiguration<Country>
     {

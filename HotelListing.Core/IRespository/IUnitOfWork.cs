@@ -1,6 +1,6 @@
-﻿using HotlListing.Models;
+﻿using HotelListing.Data;
 
-namespace HotlListing.IRespository
+namespace HotelListing.Core.IRespository
 {
     public interface IUnitOfWork : IDisposable
     {

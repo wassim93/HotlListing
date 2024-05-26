@@ -1,12 +1,12 @@
-﻿using HotlListing.Dtos;
-using HotlListing.IRespository;
+﻿using HotelListing.Core.IRespository;
+using HotelListing.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using X.PagedList;
 
 
-namespace HotlListing.Repository
+namespace HotelListing.Core.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

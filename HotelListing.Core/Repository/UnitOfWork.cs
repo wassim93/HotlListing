@@ -1,7 +1,7 @@
-﻿using HotlListing.IRespository;
-using HotlListing.Models;
+﻿using HotelListing.Core.IRespository;
+using HotelListing.Data;
 
-namespace HotlListing.Repository
+namespace HotelListing.Core.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {

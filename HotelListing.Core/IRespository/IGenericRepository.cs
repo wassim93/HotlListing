@@ -1,9 +1,9 @@
-﻿using HotlListing.Dtos;
+﻿using HotelListing.Core.Models;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using X.PagedList;
 
-namespace HotlListing.IRespository
+namespace HotelListing.Core.IRespository
 {
     public interface IGenericRepository<T> where T : class
     {

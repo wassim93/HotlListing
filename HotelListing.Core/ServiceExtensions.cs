@@ -1,13 +1,19 @@
 ﻿using AspNetCoreRateLimit;
-using HotlListing.Models;
+using HotelListing.Core.Models;
+using HotelListing.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Reflection;
 using System.Text;
 
-namespace HotlListing
+namespace HotelListing.Core
 {
     public static class ServiceExtensions
     {
@@ -75,6 +81,11 @@ namespace HotlListing
                     validationOpt.MustRevalidate = true;
                 }
             );
+        }
+
+        public static void ConfigureAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         public static void ConfigureRateLimiting(this IServiceCollection services)

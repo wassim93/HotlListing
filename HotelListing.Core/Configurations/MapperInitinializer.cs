@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using HotlListing.Dtos;
-using HotlListing.Models;
+using HotelListing.Core.Dtos;
+using HotelListing.Data;
 
-namespace HotlListing.Configurations
+namespace HotelListing.Core.Configurations
 {
     public class MapperInitinializer : Profile
     {

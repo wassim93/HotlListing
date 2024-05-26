@@ -1,6 +1,6 @@
-﻿using HotlListing.Dtos;
+﻿using HotelListing.Core.Dtos;
 
-namespace HotlListing.Services
+namespace HotelListing.Core.Services
 {
     public interface IAuthManager
     {

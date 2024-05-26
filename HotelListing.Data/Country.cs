@@ -1,4 +1,4 @@
-﻿namespace HotlListing.Models
+﻿namespace HotelListing.Data
 {
     public class Country
     {
