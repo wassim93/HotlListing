@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using HotlListing;
 using HotlListing.Configurations;
 using HotlListing.IRespository;
@@ -17,8 +18,15 @@ builder.Host.UseSerilog((context, configuration) =>
 
 
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddResponseCaching();
+
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimiting();
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.ConfigureHttpCacheHeader();
+builder.Services.AddResponseCaching();
+
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
@@ -76,6 +84,7 @@ app.UseSerilogRequestLogging();
 app.UseCors("AllowAll");
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
+app.UseIpRateLimiting();
 
 app.UseHttpsRedirection();
 
